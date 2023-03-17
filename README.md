@@ -49,7 +49,7 @@ To perform supervised cell typing, it is necessary to have both a training set a
 
 The first metric evaluates the accuracy of glomerular cell assignments to glomeruli, as kidneys contain substructures called glomeruli that comprise distinct cell types. Our expectation is that 100% of podocytes and glomerular endothelial cells will be assigned to glomeruli, while 0% of proximal tubule cells will be assigned to glomeruli. 
 
-We use bar charts (Figure1, 2, 3) to present the first metrics, showing the percentage of each cell type in the glomeruli, along with confidence intervals. We use a red line to indicate the target percentage for each cell type (i.e., 100% for podocytes and glomerular endothelial cells, and 0% for proximal tubule cells).  The cells are grouped based on their transcript expression level, including all cells and cells with 0-50, 51-100, 101-200, and >200 transcripts. 
+We use bar charts ([Figure1.](), [Figure2.](), [Figure3.]()) to present the first metrics, showing the percentage of each cell type in the glomeruli, along with confidence intervals. We use a red line to indicate the target percentage for each cell type (i.e., 100% for podocytes and glomerular endothelial cells, and 0% for proximal tubule cells).  The cells are grouped based on their transcript expression level, including all cells and cells with 0-50, 51-100, 101-200, and >200 transcripts. 
 
 We perform benchmarking on three datasets: the full dataset, and two down sampled datasets which are a random sample of 50% of the genes and the top 10% most highly variable genes. We do this in response to certain company competitors who offer products focused on analyzing the top 10% most highly variable genes. 
 

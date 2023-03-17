@@ -40,7 +40,8 @@ To access performance, we used three evaluation metrics: Bayesian Information Cr
 
   To tune the number of cells in phase 1, we investigated a subsample size range from 1,000 to 20,000 cells, indexing by 1,000 cells and evaluated the performance using the three proposed metrics. 
 
-- Number of cohorts: “Cohorting” is a pre-clustering step performed before InSituType is run. The use of the cohort parameter in InSituType incorporates alternative data types. Examples of these alternative data types include information on the spatial context of the cell types in tissue, images, and immunofluorescence stains with diverse distributions. The cohort membership defines the cell’s prior probability of belonging to each cell type, in other words informing the likelihood calculations in the EM algorithm. We have no idea how fine-grained these pre-clusters should be. As a result, we explore values ranging from 0 to 100 to see how the default value of 25 performs. Similar to the other parameters, we evaluated the performance using ARI, BIC, and system time and tested only on the full CPA dataset. 
+- Number of cohorts: 
+  “Cohorting” is a pre-clustering step performed before InSituType is run. The use of the cohort parameter in InSituType incorporates alternative data types. Examples of these alternative data types include information on the spatial context of the cell types in tissue, images, and immunofluorescence stains with diverse distributions. The cohort membership defines the cell’s prior probability of belonging to each cell type, in other words informing the likelihood calculations in the EM algorithm. We have no idea how fine-grained these pre-clusters should be. As a result, we explore values ranging from 0 to 100 to see how the default value of 25 performs. Similar to the other parameters, we evaluated the performance using ARI, BIC, and system time and tested only on the full CPA dataset. 
 
 ### Benchmarking supervised cell typing
 

@@ -59,15 +59,15 @@ Similar to the first metrics, the second metrics use bar charts ([Figure4](https
 
 To evaluate the performance of our supervised cell typing approach, we compare InSituType to SingleR, CHETAH, SeuratV3, SingleCellNet, scPred, and SVM. Additionally, we conduct all analyses in a consistent computing environment and record computation times. 
 
-- *SingleR*: An unbiased cell typing method for scRNA-seq by leveraging reference transcriptomic datasets of pure cell types to infer the cell of origin of each single cell independently. 
+- **SingleR**: An unbiased cell typing method for scRNA-seq by leveraging reference transcriptomic datasets of pure cell types to infer the cell of origin of each single cell independently. 
 
-- CHETAH (Characterization of Cell Types Aided by Hierarchical classification): A scRNA-seq classifier by hierarchical clustering of the reference data. The classification tree enables a step-wise, top-to-bottom classification.  
+- **CHETAH** (Characterization of Cell Types Aided by Hierarchical classification): A scRNA-seq classifier by hierarchical clustering of the reference data. The classification tree enables a step-wise, top-to-bottom classification.  
 
-- SeuratV3: A single-cell transcriptomics classifier can anchor diverse datasets together, enabling us to integrate single-cell measurements not only across scRNA-seq, but also across 	different modalities (e.g. scATAC-seq).  
+- **SeuratV3**: A single-cell transcriptomics classifier can anchor diverse datasets together, enabling us to integrate single-cell measurements not only across scRNA-seq, but also across 	different modalities (e.g. scATAC-seq).  
 
-- SingleCellNet: A random forest classifier to learn cell type-specific gene pairs from cross-platform and cross-species datasets and thus quantitatively assesses cell identity at a single-cell resolution. 
+- **SingleCellNet**: A random forest classifier to learn cell type-specific gene pairs from cross-platform and cross-species datasets and thus quantitatively assesses cell identity at a single-cell resolution. 
 
-- ScPred: A scRNA-seq classifier by using a combination of unbiased feature selection from a 	reduced-dimensional space (e.g. PCA), and machine-learning probability-based prediction methods.  
+- **ScPred**: A scRNA-seq classifier by using a combination of unbiased feature selection from a 	reduced-dimensional space (e.g. PCA), and machine-learning probability-based prediction methods.  
 
-- SVM (support vector machines): Supervised learning models with associated learning algorithms that analyze data used for classification and regression analysis.  
+- **SVM** (support vector machines): Supervised learning models with associated learning algorithms that analyze data used for classification and regression analysis.  
 

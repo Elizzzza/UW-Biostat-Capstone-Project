@@ -32,3 +32,31 @@ We examine the performance of unsupervised clustering method by tuning parameter
 
 To access performance, we used three evaluation metrics: Bayesian Information Criterion (BIC), Adjusted Rand Index (ARI), and computation time.  With lower BIC values, we obtain models that better fit the data. A high ARI indicates high similarity between the true cell type labels and the clustering partition. ARI equals 1 when there is perfect correspondence and takes a value near 0 for a random partition. The recorded system run time allows us to access the computation resources required when running on a consistent computing environment. 
 
+### Benchmarking supervised cell typing
+
+To perform supervised cell typing, it is necessary to have both a training set and a test set. Our test set is a kidney biopsy from a lupus nephritis patient, and the Kidney Single Cell Atlas serves as the training set which provides average expression profiles for each kidney cell type based on their single-cell RNA-seq studies. Since there is no definitive gold standard cell type data for this sample, we cannot determine with certainty whether a cell type call is accurate. To evaluate the quality of our cell typing results, we rely on known kidney biology and use two metrics. 
+
+The first metric evaluates the accuracy of glomerular cell assignments to glomeruli, as kidneys contain substructures called glomeruli that comprise distinct cell types. Our expectation is that 100% of podocytes and glomerular endothelial cells will be assigned to glomeruli, while 0% of proximal tubule cells will be assigned to glomeruli. 
+
+We use bar charts (Figure1, 2, 3) to present the first metrics, showing the percentage of each cell type in the glomeruli, along with confidence intervals. We use a red line to indicate the target percentage for each cell type (i.e., 100% for podocytes and glomerular endothelial cells, and 0% for proximal tubule cells).  The cells are grouped based on their transcript expression level, including all cells and cells with 0-50, 51-100, 101-200, and >200 transcripts. 
+
+We perform benchmarking on three datasets: the full dataset, and two down sampled datasets which are a random sample of 50% of the genes and the top 10% most highly variable genes. We do this in response to certain company competitors who offer products focused on analyzing the top 10% most highly variable genes. 
+
+Second, we record the intensity of a few "marker proteins" that are highly informative of cell type for each cell. We compare the marker protein mean expression intensity between cell types that are either positive or negative for the markers, such as CD45 for immune cells versus other cell types, or PanCK for cytokeratin+ versus cytokeratin- cell types.  
+
+Similar to the first metrics, the second metrics use bar charts (Figure 4, 5) to display the results. We present the logarithmic difference in mean PanCK stain intensity between cytokeratin+ and cytokeratin- cells (Figure 4), and the logarithmic difference in CD45 stain intensity between immune and non-immune cells (Figure 5). The classification of cell types as either cytokeratin-positive or cytokeratin-negative, as well as immune or non-immune, is determined through biological knowledge. We use logarithm base 2 ratio instead of a simple difference between the mean stain intensity for two cell groups because a logarithmic scale can better represent the fold difference between groups. 
+
+To evaluate the performance of our supervised cell typing approach, we compare InSituType to SingleR, CHETAH, SeuratV3, SingleCellNet, scPred, and SVM. Additionally, we conduct all analyses in a consistent computing environment and record computation times. 
+
+- SingleR: An unbiased cell typing method for scRNA-seq by leveraging reference transcriptomic datasets of pure cell types to infer the cell of origin of each single cell independently. 
+
+- CHETAH (Characterization of Cell Types Aided by Hierarchical classification): A scRNA-seq classifier by hierarchical clustering of the reference data. The classification tree enables a step-wise, top-to-bottom classification.  
+
+- SeuratV3: A single-cell transcriptomics classifier can anchor diverse datasets together, enabling us to integrate single-cell measurements not only across scRNA-seq, but also across 	different modalities (e.g. scATAC-seq).  
+
+- SingleCellNet: A random forest classifier to learn cell type-specific gene pairs from cross-platform and cross-species datasets and thus quantitatively assesses cell identity at a single-cell resolution. 
+
+- ScPred: A scRNA-seq classifier by using a combination of unbiased feature selection from a 	reduced-dimensional space (e.g. PCA), and machine-learning probability-based prediction methods.  
+
+- SVM (support vector machines): Supervised learning models with associated learning algorithms that analyze data used for classification and regression analysis.  
+

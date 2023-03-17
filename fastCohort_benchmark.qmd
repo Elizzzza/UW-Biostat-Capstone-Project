@@ -1,0 +1,196 @@
+---
+title: "Benchmarking Unsupervised Methods: fastCohorting"
+format: html
+editor: visual
+---
+
+# Setup
+
+```{r}
+pacman::p_load(dplyr, tibble, tidyr, purrr, furrr, InSituType, future, mclust, 
+               CrossClustering, SingleCellExperiment, doParallel, foreach, ggplot2,
+               scater, scran, readr)
+
+rm(list = ls())
+
+setwd("~/Documents/UW Classes/Capstone/Nanostring Benchmark")
+
+#### load CPA data: ---------------
+load("~/Documents/UW Classes/Capstone/Nanostring Benchmark/data/Cell Pellet Array annotation and raw counts.RData")
+counts = t(as.matrix(raw))
+badprobes = read.csv("~/Documents/UW Classes/Capstone/Nanostring Benchmark/data/genes with efficiency 8-fold below average in old CPA panel.csv")[,2]
+counts = counts[, !is.element(colnames(counts), badprobes)]
+
+# remove the cell lines with failed FOVs:
+failed.cell.lines = names(which(by(annot$raw_totalCount, annot$cell_line, median) < 150))
+remove = is.element(annot$cell_line, failed.cell.lines)
+annot = annot[!remove, ]
+counts = counts[!remove, ]
+
+# remove other 
+rm(raw)
+
+# if cohorts
+ifdata = as.matrix(annot[, paste0(c("Blue", "Red", "Yellow", "Green"), "Int")])
+ifcohort = fastCohorting(mat = ifdata)
+
+# 96 HVG
+sce_hvg = SingleCellExperiment(assays = list(counts = t(counts)), #make SCE
+                               colData = annot)
+sce_hvg = logNormCounts(sce_hvg) #normalize
+top = getTopHVGs(sce_hvg, n = 96)
+sce_hvg = sce_hvg[top, ]
+sce_hvg = scater::runPCA(sce_hvg, subset_row = top)
+
+counts_hvg = counts[,top]
+hvg_filter = rowSums(counts_hvg) >= 5
+annot_hvg = annot[hvg_filter,]
+counts_hvg = counts_hvg[hvg_filter,]
+sce_hvg = sce_hvg[,hvg_filter]
+pcs_hvg = reducedDim(sce_hvg)
+
+# 96 HVG: if cohorts
+ifdata_hvg = as.matrix(annot_hvg[, paste0(c("Blue", "Red", "Yellow", "Green"), "Int")])
+ifcohort_hvg = fastCohorting(mat = ifdata_hvg)
+
+# BIC Function
+calculate_bic <- function(insitutype_output) {
+  
+  # Get total log likelihood----
+  # Extract log-likelihood matrix
+  log_liks <- insitutype_output$logliks
+  # Initialize 
+  log_liks_total <- 0
+  
+  # Loop over log_liks
+  for(ii in 1:nrow(log_liks)) {
+    log_liks_total <- log_liks_total + max(log_liks[ii, ])
+  }
+  
+  # Get k = number of parameters in the model----
+  # Extract profile matrix
+  profiles <- insitutype_output$profiles
+  # Number of genes
+  num_genes <- dim(profiles)[1]
+  # Number of clusters
+  num_clusters <- dim(profiles)[2]
+  # Number of parameters
+  num_param <- num_genes * num_clusters
+  
+  # Get n = number of data points----
+  num_data <- nrow(insitutype_output$logliks)
+  
+  # Calculate BIC
+  bic_final <- num_param * log(num_data) - 2 * log_liks_total
+  
+  return(bic_final)
+}
+```
+
+# fastCohorting
+
+## Full Genes
+
+### IF Cohorts
+
+```{r}
+set.seed(9)
+n_cohorts <- c(5, 15, 25, 35, 45, 55, 65, 75, 85, 100)
+
+n_cohorts_results <- data.frame(
+  n_cohorts = vector("integer", length(n_cohorts)),
+  ari = vector("numeric", length(n_cohorts)),
+  bic = vector("numeric", length(n_cohorts)),
+  elapsed_time = vector("numeric", length(n_cohorts))
+)
+
+
+# if cohorts
+for (ii in seq_along(n_cohorts)) {
+  # Start timer
+  start_time <- Sys.time()
+  # Message
+  print(paste0("Running number of cohorts = ", n_cohorts[ii],
+               " at start time : ", start_time, " ==================="))
+  # Run fastCohorting()
+  ifcohort = fastCohorting(mat = ifdata, n_cohorts = n_cohorts[ii])
+  # Run insitutype() 
+  insitutype_output <- insitutype(x = counts,
+                                  neg = annot$negmean,
+                                  n_clusts = 13,
+                                  n_starts = 10,
+                                  n_phase1 = 10000,
+                                  cohort = ifcohort)
+  # End timer
+  end_time <- Sys.time()
+  # Calculate elapsed time
+  elapsed_time <- end_time - start_time
+  
+  # Calculate ARI and BIC
+  ari <- mclust::adjustedRandIndex(insitutype_output$clust, annot$cell_line)
+  bic <- calculate_bic(insitutype_output)
+  
+  n_cohorts_results[ii, "n_cohorts"] <- n_cohorts[ii]
+  n_cohorts_results[ii, "ari"] <- ari
+  n_cohorts_results[ii, "bic"] <- bic
+  n_cohorts_results[ii, "elapsed_time"] <- elapsed_time
+}
+```
+
+```{r}
+#write.csv(n_cohorts_results, "Name.csv", row.names = FALSE)
+```
+
+## Half Gene
+
+### IF Cohorts
+
+```{r}
+set.seed(9)
+counts_half_cols <- sample.int(ncol(counts), ncol(counts)/2)
+
+n_cohorts <- c(5, 15, 25, 35, 45, 55, 65, 75, 85, 100)
+
+n_cohorts_results <- data.frame(
+  n_cohorts = vector("integer", length(n_cohorts)),
+  ari = vector("numeric", length(n_cohorts)),
+  bic = vector("numeric", length(n_cohorts)),
+  elapsed_time = vector("numeric", length(n_cohorts))
+)
+
+
+# No cohorts
+for (ii in seq_along(n_cohorts)) {
+  # Start timer
+  start_time <- Sys.time()
+  # Message
+  print(paste0("Running number of clusters = ", n_cohorts[ii],
+               " at start time : ", start_time, " ==================="))
+  # Run fastCohorting()
+  ifcohort = fastCohorting(mat = ifdata, n_cohorts = n_cohorts[ii])
+  # Run insitutype() 
+  insitutype_output <- insitutype(x = counts[, counts_half_cols],
+                                       neg = annot$negmean,
+                                       n_clusts = 13,
+                                       n_starts = 10,
+                                       n_phase1 = 10000,
+                                       cohort = ifcohort)
+  # End timer
+  end_time <- Sys.time()
+  # Calculate elapsed time
+  elapsed_time <- end_time - start_time
+  
+  # Calculate ARI and BIC
+  ari <- mclust::adjustedRandIndex(insitutype_output$clust, annot$cell_line)
+  bic <- calculate_bic(insitutype_output)
+  
+  n_cohorts_results[ii, "n_cohorts"] <- n_cohorts[ii]
+  n_cohorts_results[ii, "ari"] <- ari
+  n_cohorts_results[ii, "bic"] <- bic
+  n_cohorts_results[ii, "elapsed_time"] <- elapsed_time
+}
+```
+
+```{r}
+#write.csv(n_cohorts_results, "Name.csv", row.names = FALSE)
+```

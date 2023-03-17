@@ -73,7 +73,7 @@ To evaluate the performance of our supervised cell typing approach, we compare I
 
 - **SVM** (support vector machines): Supervised learning models with associated learning algorithms that analyze data used for classification and regression analysis.  
 
-## References
+## Reference
 
 Insitutype: likelihood-based cell typing for single cell spatial transcriptomics. Patrick Danaher, Edward Zhao, Zhi Yang, David Ross, Mark Gregory, Zach Reitz, Tae K. Kim, Sarah Baxter, Shaun Jackson, Shanshan He, Dave Henderson, Joseph M. Beechem bioRxiv 2022.10.19.512902; doi: https://doi.org/10.1101/2022.10.19.512902
 

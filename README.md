@@ -1,6 +1,6 @@
 # UW-Biostat-Capstone-Project
 
-**Benchmark Analysis of InSituType Cell Typing Model for Spatial Transcriptomics** 
+### Benchmark Analysis of InSituType Cell Typing Model for Spatial Transcriptomics
 
 Sep. 2022 - Mar. 2023
 

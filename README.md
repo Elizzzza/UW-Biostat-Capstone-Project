@@ -6,7 +6,11 @@ Sep. 2022 - Mar. 2023
 
 Sponsor: NanoString Technologies, Inc 
 
-Project Members: Howard Baek, Eliza Chai, Alexis Harris, Ingrid Luo, Makayla Tang 
+Team member contributions:
+
+Supervised methods: Ingrid Luo, Makalya Tang
+
+Unsupervised methods: Howard Baek, Eliza Chai, Alexis Harris
 
 ## Background
 

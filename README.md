@@ -8,9 +8,9 @@ Sponsor: NanoString Technologies, Inc
 
 Team member contributions:
 
-Supervised methods: Ingrid Luo, Makalya Tang
+- Supervised methods: Ingrid Luo, Makalya Tang
 
-Unsupervised methods: Howard Baek, Eliza Chai, Alexis Harris
+- Unsupervised methods: Howard Baek, Eliza Chai, Alexis Harris
 
 ## Background
 
